@@ -12,7 +12,7 @@
 
 <body>
     <main class="container">
-        <article>
+        <section>
             <h2>Add a contact</h2>
             <form method="post" action="/contacts">
                 @csrf
@@ -30,15 +30,21 @@
                 </div>
                 <button type="submit">Add to Contacts</button>
             </form>
-        </article>
+        </section>
+        <hr>
         <h2>Contacts</h2>
-        <ul>
-            @foreach ($contacts as $contact)
-            <li>
-                <span>{{$contact->name}}, {{$contact->email}}</span>
-            </li>
-            @endforeach
-        </ul>
+        @foreach ($contacts as $contact)
+        <article>
+            <h3>{{$contact->name}}</h3>
+            <p>ID: {{$contact->id}}</p>
+            <p>E-mail: {{$contact->email}}</p>
+            <form method="post" action="/delete-contact/{{$contact->id}}">
+                @csrf
+                <button>Delete</button>
+            </form>
+            <a href="/contacts/{{$contact->id}}" role="button">View details</a>
+        </article>
+        @endforeach
     </main>
 </body>
 
