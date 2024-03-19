@@ -1,51 +1,35 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Laravel</title>
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
-    <script src="https://unpkg.com/htmx.org@1.9.11"></script>
-</head>
-
-<body>
-    <main class="container">
-        <section>
-            <h2>Add a contact</h2>
-            <form method="post" action="/contacts">
-                @csrf
-                <div>
-                    <label>
-                        Name
-                        <input type="text" name="name">
-                    </label>
-                </div>
-                <div>
-                    <label>
-                        E-mail
-                        <input type="email" name="email">
-                    </label>
-                </div>
-                <button type="submit">Add to Contacts</button>
-            </form>
-        </section>
-        <hr>
-        <h2>Contacts</h2>
-        @foreach ($contacts as $contact)
-        <article>
-            <h3>{{$contact->name}}</h3>
-            <p>ID: {{$contact->id}}</p>
-            <p>E-mail: {{$contact->email}}</p>
+<x-layout>
+    <section>
+        <h2>Add a contact</h2>
+        <form method="post" action="/contacts">
+            @csrf
+            <div>
+                <label>
+                    Name
+                    <input type="text" name="name">
+                </label>
+            </div>
+            <div>
+                <label>
+                    E-mail
+                    <input type="email" name="email">
+                </label>
+            </div>
+            <button type="submit">Add to Contacts</button>
+        </form>
+    </section>
+    <hr>
+    <h2>Contacts</h2>
+    @foreach ($contacts as $contact)
+    <article>
+        <pre class="p-2 rounded">{{ json_encode($contact, JSON_PRETTY_PRINT) }}</pre>
+        <div class="flex gap-4">
             <form method="post" action="/delete-contact/{{$contact->id}}">
                 @csrf
                 <button>Delete</button>
             </form>
             <a href="/contacts/{{$contact->id}}" role="button">View details</a>
-        </article>
-        @endforeach
-    </main>
-</body>
-
-</html>
+        </div>
+    </article>
+    @endforeach
+</x-layout>
