@@ -11,16 +11,28 @@ Route::get('/', function () {
 });
 
 Route::post('/contacts', function (Request $request) {
-    DB::table('contacts')->insert([
+    $contact_id = DB::table('contacts')->insertGetId([
         'name' => $request->input('name'),
         'email' => $request->input('email'),
     ]);
 
+    $contact = DB::table('contacts')->find($contact_id);
+
+    $hx_request = $request->header('HX-Request');
+    if ($hx_request) {
+        return view('components.contact-card', ['contact' => $contact]);
+    }
+
     return redirect('/');
 });
 
-Route::post('/delete-contact/{id}', function (int $id) {
+Route::post('/delete-contact/{id}', function (Request $request, int $id) {
     DB::table('contacts')->delete($id);
+
+    $hx_request = $request->header('HX-Request');
+    if ($hx_request) {
+        return response('', 200);
+    }
 
     return redirect('/');
 });

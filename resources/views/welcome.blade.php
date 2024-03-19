@@ -1,35 +1,30 @@
 <x-layout>
     <section>
         <h2>Add a contact</h2>
-        <form method="post" action="/contacts">
+        <form hx-post="/contacts" hx-target="#contact-list" hx-swap="beforeend" hx-on::after-request="if (event.detail.successful) this.reset()">
             @csrf
             <div>
                 <label>
                     Name
-                    <input type="text" name="name">
+                    <input type="text" name="name" required>
                 </label>
             </div>
             <div>
                 <label>
                     E-mail
-                    <input type="email" name="email">
+                    <input type="email" name="email" required>
                 </label>
             </div>
-            <button type="submit">Add to Contacts</button>
+            <button>Add to contacts</button>
         </form>
     </section>
     <hr>
     <h2>Contacts</h2>
-    @foreach ($contacts as $contact)
-    <article>
-        <pre class="p-2 rounded">{{ json_encode($contact, JSON_PRETTY_PRINT) }}</pre>
-        <div class="flex gap-4">
-            <form method="post" action="/delete-contact/{{$contact->id}}">
-                @csrf
-                <button>Delete</button>
-            </form>
-            <a href="/contacts/{{$contact->id}}" role="button">View details</a>
-        </div>
-    </article>
-    @endforeach
+    <ul id="contact-list">
+        @foreach ($contacts as $contact)
+        <li class="list-none">
+            <x-contact-card :contact="$contact" />
+        </li>
+        @endforeach
+    </ul>
 </x-layout>
