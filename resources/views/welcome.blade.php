@@ -1,8 +1,14 @@
 <x-layout>
     <section>
         <h2>Add a contact</h2>
-        <form hx-post="/contacts" hx-target="#contact-list" hx-swap="beforeend" hx-on::after-request="if (event.detail.successful) this.reset()">
+        <form hx-post="/contacts" hx-target="#contact-list" hx-swap="beforeend" hx-on::after-request="if (event.detail.successful) this.reset()" enctype="multipart/form-data">
             @csrf
+            <div>
+                <label>
+                    Avatar
+                    <input type="file" name="avatar" accept="image/*">
+                </label>
+            </div>
             <div>
                 <label>
                     Name

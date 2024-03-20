@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 Route::get('/', function () {
     $contacts = DB::table('contacts')->get();
@@ -11,9 +12,15 @@ Route::get('/', function () {
 });
 
 Route::post('/contacts', function (Request $request) {
+    $avatar_path = null;
+    if ($request->hasFile('avatar')) {
+        $avatar_path = $request->file('avatar')->store('public/avatars');
+    }
+
     $contact_id = DB::table('contacts')->insertGetId([
         'name' => $request->input('name'),
         'email' => $request->input('email'),
+        'avatar' => Storage::url($avatar_path),
     ]);
 
     $contact = DB::table('contacts')->find($contact_id);
